@@ -4,8 +4,8 @@
 
 ### Student Info
 
--   Name: YOUR NAME
--   Section: ##
+-   Name: Kai Gidwani
+-   Section: 02
 
 ## Game Design
 
