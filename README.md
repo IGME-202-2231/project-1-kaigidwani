@@ -1,4 +1,4 @@
-# Project PROJECT_NAME
+# Project FLYING V (working title)
 
 [Markdown Cheatsheet](https://github.com/adam-p/markdown-here/wiki/Markdown-Here-Cheatsheet)
 
@@ -9,28 +9,29 @@
 
 ## Game Design
 
--   Camera Orientation: _How are the art assets viewed from? (ie. topdown or side)_
--   Camera Movement: _How does the camera move in your game? (if at all)_
--   Player Health: _How are you handling player health? (healthbar, lives, ?)_
--   End Condition: _How does a game/round/level end?_
--   Scoring: _How does the player earn points in your game?_
+-   Camera Orientation: Top down
+-   Camera Movement: Camera stays still as enemies come to you
+-   Player Health: Set amount of lives
+-   End Condition: Defeating all the enemies on the screen
+-   Scoring: Blasting enemies
 
 ### Game Description
 
 _A brief explanation of your game. Inculde what is the objective for the player. Think about what would go on the back of a game box._
+You are a magical Flying V Guitar set on spreading the love of music to all those who will hear you out. By force. Your goal is to destroy all other instruments and prove through the power of music and incredible violence that the Flying V Guitar is the best instrument ever.
 
 ### Controls
 
 -   Movement
-    -   Up: 
-    -   Down: 
-    -   Left: 
-    -   Right: 
--   Fire: 
+    -   Up: W
+    -   Down: S
+    -   Left: A
+    -   Right: D
+-   Fire: Space
 
 ## You Additions
 
-_List out what you added to your game to make it different for you_
+I hand made all the art assets myself!
 
 ## Sources
 
