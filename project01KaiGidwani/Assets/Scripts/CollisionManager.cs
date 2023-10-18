@@ -48,7 +48,8 @@ public class CollisionManager : MonoBehaviour
         // Reset player flag to false
         player.GetComponent<SpriteInfo>().IsColliding = false;
 
-        // Loop through and check all enemy bullets against the player
+
+        // Loop through and check all ENEMY BULLETS against the PLAYER
         foreach (GameObject enemyBullet in enemyBullets)
         {
             // Bool to hold if theyre colliding to set both objects
@@ -64,11 +65,19 @@ public class CollisionManager : MonoBehaviour
                 // *** Do something with player getting hit here ***
                 player.GetComponent<SpriteInfo>().IsColliding = true;
                 enemyBullet.GetComponent<SpriteInfo>().IsColliding = true;
+
+                // Remove the reference to the bullet
+                enemyBullets.Remove(enemyBullet);
+                // Get rid of the bullet from the scene
+                Destroy(enemyBullet);
+
+                // Do not remove the player haha
+                // Reduce the player health here
             }
         }
 
-        // Loop through and check all enemies against the player and
-        // also check if a player is hitting an enemy
+        // Loop through and check all ENEMIES against the PLAYER BULLETS and
+        // also check if an ENEMY is hitting the PLAYER
         foreach (GameObject enemy in enemies)
         {
             foreach (GameObject playerBullet in playerBullets)
@@ -86,6 +95,17 @@ public class CollisionManager : MonoBehaviour
                     // *** Do something about enemy collision here ***
                     enemy.GetComponent<SpriteInfo>().IsColliding = true;
                     playerBullet.GetComponent<SpriteInfo>().IsColliding = true;
+
+
+                    // Remove the reference to the bullet
+                    playerBullets.Remove(playerBullet);
+                    // Get rid of the bullet from the scene
+                    Destroy(playerBullet);
+
+                    // Remove the reference to the enemy
+                    enemies.Remove(enemy);
+                    // Get rid of the enemy from the scene
+                    Destroy(enemy);
                 }
             }
 
@@ -104,6 +124,10 @@ public class CollisionManager : MonoBehaviour
                 // *** Do something with player getting hit here ***
                 enemy.GetComponent<SpriteInfo>().IsColliding = true;
                 player.GetComponent<SpriteInfo>().IsColliding = true;
+
+                // Do not destroy the enemy or the player here
+                // Maybe destroy enemy later, will playtest
+                // Reduce player health
             }
         }
     }
