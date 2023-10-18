@@ -3,13 +3,14 @@ using System.Collections.Generic;
 using UnityEngine;
 
 // Kai Gidwani
-// 9/20/23
-// Controls the movement of the character
+// 10/17/23
+// Controls the movement of all objects
 
 public class MovementController : MonoBehaviour
 {
     private Vector3 objectPosition; // Initialized in Start() via transform
     [SerializeField] private float speed = 1f; // Set in the inspector
+    [SerializeField] private bool wrap = false;
 
     private Vector3 velocity = Vector3.zero;
 
@@ -19,7 +20,7 @@ public class MovementController : MonoBehaviour
     private float width;
 
     // Direction object is facing, must be normalized
-    private Vector3 direction;
+    [SerializeField] private Vector3 direction = new Vector3(0, 0, 0);
     internal Vector3 Direction
     {
         get { return direction; } // Provide it if needed
@@ -34,8 +35,7 @@ public class MovementController : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        // Set up direction and position
-        Direction = new Vector3(0, 0, 0);
+        // Set up position
         objectPosition = transform.position;
 
         // Initialize camera values
@@ -55,32 +55,35 @@ public class MovementController : MonoBehaviour
         // New position is current position + velocity
         objectPosition += velocity;
 
-        // Extra logic to adjust for wrapping...
+        if (wrap)
+        {
+            // Extra logic to adjust for wrapping...
 
-        // If passing the left side
-        if (objectPosition.x < -width)
-        {
-            // Wrap to the right side
-            objectPosition.x = width;
-        }
-        // If passing the right side
-        else if (objectPosition.x > width)
-        {
-            // Wrap to the left side
-            objectPosition.x = -width;
-        }
+            // If passing the left side
+            if (objectPosition.x < -width)
+            {
+                // Wrap to the right side
+                objectPosition.x = width;
+            }
+            // If passing the right side
+            else if (objectPosition.x > width)
+            {
+                // Wrap to the left side
+                objectPosition.x = -width;
+            }
 
-        // If passing the top
-        if (objectPosition.y < -height)
-        {
-            // Wrap to the bottom
-            objectPosition.y = height;
-        }
-        // If passing the bottom
-        else if (objectPosition.y > height)
-        {
-            // Wrap to the top
-            objectPosition.y = -height;
+            // If passing the top
+            if (objectPosition.y < -height)
+            {
+                // Wrap to the bottom
+                objectPosition.y = height;
+            }
+            // If passing the bottom
+            else if (objectPosition.y > height)
+            {
+                // Wrap to the top
+                objectPosition.y = -height;
+            }
         }
 
         // Draw the vehicle at that new position

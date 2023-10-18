@@ -4,11 +4,6 @@ using UnityEngine;
 
 public class SpriteInfo : MonoBehaviour
 {
-    // Info if circle
-    [SerializeField] private float radius;
-    [SerializeField] public float Radius { get { return radius; } }
-
-
     // Info if box
     [SerializeField] private Vector2 boundingBox = Vector2.one;
     public Vector2 BoxSize { get { return boundingBox; } }
@@ -51,7 +46,5 @@ public class SpriteInfo : MonoBehaviour
             transform.position,
             new Vector3(boundingBox.x, boundingBox.y, 0)
             );
-
-        Gizmos.DrawWireSphere(transform.position, radius);
     }
 }
