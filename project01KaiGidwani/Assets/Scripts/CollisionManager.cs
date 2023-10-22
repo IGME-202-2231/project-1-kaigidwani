@@ -16,13 +16,19 @@ public class CollisionManager : MonoBehaviour
     [SerializeField] private List<GameObject> enemies;
 
     // Prefab for player bullet
-    [SerializeField] private GameObject playerBullet;
+    [SerializeField] private GameObject texturePlayerBullet;
 
     // Prefab for small enemy bullet
     [SerializeField] private GameObject smallEnemyBullet;
 
     // Prefab for big enemy bullet
     [SerializeField] private GameObject bigEnemyBullet;
+
+    // Start player health at 3
+    private int playerHealth = 3;
+
+    // Start player score at 0
+    private int playerScore = 0;
 
     // List to hold all the enemy and player bullets
     private List<GameObject> playerBullets = new List<GameObject>();
@@ -70,15 +76,14 @@ public class CollisionManager : MonoBehaviour
             // Set flags to true if it is, leave alone if not
             if (colliding)
             {
-                // *** Do something with player getting hit here ***
                 player.GetComponent<SpriteInfo>().IsColliding = true;
                 enemyBullet.GetComponent<SpriteInfo>().IsColliding = true;
 
-                // Add the reference the bullet to the list to be removed
+                // Add the reference the enemy bullet to the list to be removed
                 enemyBulletsToRemove.Add(enemyBullet);
 
-                // Do not remove the player haha
-                // Reduce the player health here
+                // Reduce the player health for getting hit
+                playerHealth--;
             }
         }
 
@@ -102,15 +107,11 @@ public class CollisionManager : MonoBehaviour
                     playerBullet.GetComponent<SpriteInfo>().IsColliding = true;
 
 
-                    // Remove the reference to the bullet
-                    playerBullets.Remove(playerBullet);
-                    // Get rid of the bullet from the scene
-                    Destroy(playerBullet);
+                    // Add the reference the player bullet to the list to be removed
+                    playerBulletsToRemove.Add(playerBullet);
 
-                    // Remove the reference to the enemy
-                    enemies.Remove(enemy);
-                    // Get rid of the enemy from the scene
-                    Destroy(enemy);
+                    // Add the reference the enemy to the list to be removed
+                    enemiesToRemove.Add(enemy);
                 }
             }
 
@@ -130,11 +131,14 @@ public class CollisionManager : MonoBehaviour
                 enemy.GetComponent<SpriteInfo>().IsColliding = true;
                 player.GetComponent<SpriteInfo>().IsColliding = true;
 
-                // Do not destroy the enemy or the player here
-                // Maybe destroy enemy later, will playtest
-                // Reduce player health
+                // Add the reference the enemy to the list to be removed
+                enemiesToRemove.Add(enemy);
+
+                // Reduce player health for getting hit
+                playerHealth--;
             }
         }
+
 
         // Once all collision checking is done remove things that need to be removed
 
@@ -146,9 +150,39 @@ public class CollisionManager : MonoBehaviour
             // Get rid of the bullet from the scene
             Destroy(enemyBullet);
         }
-                
-        // do for enemy and player bullets here
-                
+
+        // Remove the player bullets
+        foreach (GameObject playerBullet in playerBulletsToRemove)
+        {
+            // Remove the reference to the bullet
+            playerBullets.Remove(playerBullet);
+            // Get rid of the bullet from the scene
+            Destroy(playerBullet);
+        }
+
+        // Remove the enemy bullets
+        foreach (GameObject enemy in enemiesToRemove)
+        {
+            // Remove the reference to the bullet
+            enemies.Remove(enemy);
+            // Get rid of the bullet from the scene
+            Destroy(enemy);
+        }
+
+
+        // Check if game is over
+
+        // Less than or equal to 0 because it is technically possible although
+        // highly unlikely to get less than 0 health
+        // if you get hit by an enemy and a bullet on the same frame
+        if (playerHealth <= 0) 
+        {
+            // Game over lose here
+        }
+        else if (enemies.Count == 0)
+        {
+            // Game over win here
+        }
     }
 
     private bool aabbCheck(GameObject sA, GameObject sB)
