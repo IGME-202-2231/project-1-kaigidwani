@@ -15,11 +15,14 @@ public class CollisionManager : MonoBehaviour
     // References to all enemies
     [SerializeField] private List<GameObject> enemies;
 
-    // Sprite for player bullet
-    [SerializeField] private GameObject texturePlayerBullet;
+    // Prefab for player bullet
+    [SerializeField] private GameObject playerBullet;
 
-    // Sprite for enemy bullet
-    [SerializeField] private GameObject textureEnemyBullet;
+    // Prefab for small enemy bullet
+    [SerializeField] private GameObject smallEnemyBullet;
+
+    // Prefab for big enemy bullet
+    [SerializeField] private GameObject bigEnemyBullet;
 
     // List to hold all the enemy and player bullets
     private List<GameObject> playerBullets = new List<GameObject>();
@@ -49,6 +52,11 @@ public class CollisionManager : MonoBehaviour
         player.GetComponent<SpriteInfo>().IsColliding = false;
 
 
+        // Create lists of items to remove if they are colliding
+        List<GameObject> playerBulletsToRemove = new List<GameObject>();
+        List<GameObject> enemyBulletsToRemove = new List<GameObject>();
+        List<GameObject> enemiesToRemove = new List<GameObject>();
+
         // Loop through and check all ENEMY BULLETS against the PLAYER
         foreach (GameObject enemyBullet in enemyBullets)
         {
@@ -66,10 +74,8 @@ public class CollisionManager : MonoBehaviour
                 player.GetComponent<SpriteInfo>().IsColliding = true;
                 enemyBullet.GetComponent<SpriteInfo>().IsColliding = true;
 
-                // Remove the reference to the bullet
-                enemyBullets.Remove(enemyBullet);
-                // Get rid of the bullet from the scene
-                Destroy(enemyBullet);
+                // Add the reference the bullet to the list to be removed
+                enemyBulletsToRemove.Add(enemyBullet);
 
                 // Do not remove the player haha
                 // Reduce the player health here
@@ -92,7 +98,6 @@ public class CollisionManager : MonoBehaviour
                 // Set flags to true if it is, leave alone if not
                 if (pBulletColliding)
                 {
-                    // *** Do something about enemy collision here ***
                     enemy.GetComponent<SpriteInfo>().IsColliding = true;
                     playerBullet.GetComponent<SpriteInfo>().IsColliding = true;
 
@@ -130,6 +135,20 @@ public class CollisionManager : MonoBehaviour
                 // Reduce player health
             }
         }
+
+        // Once all collision checking is done remove things that need to be removed
+
+        // Remove the enemy bullets
+        foreach (GameObject enemyBullet in enemyBulletsToRemove)
+        {
+            // Remove the reference to the bullet
+            enemyBullets.Remove(enemyBullet);
+            // Get rid of the bullet from the scene
+            Destroy(enemyBullet);
+        }
+                
+        // do for enemy and player bullets here
+                
     }
 
     private bool aabbCheck(GameObject sA, GameObject sB)
