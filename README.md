@@ -48,5 +48,5 @@ I hand made all the art assets myself!
 
 ### Requirements not completed
 
-_If you did not complete a project requirement, notate that here_
+-    None
 
