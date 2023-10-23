@@ -44,7 +44,7 @@ public class EnemyBehavior : MonoBehaviour
         // If the random number is within the threshold set by shootingAmount
         if (Time.time > nextShot)
         {
-            if (Random.Range(1, 1000) <= shootingAmount)
+            if (Random.Range(1, 700) <= shootingAmount)
             {
                 // Reset shooting timer
                 nextShot = Time.time + shootingInterval;
