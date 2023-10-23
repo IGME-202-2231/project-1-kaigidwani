@@ -13,7 +13,7 @@
 -   Camera Movement: Camera stays still as enemies come to you
 -   Player Health: Set amount of lives
 -   End Condition: Defeating all the enemies on the screen
--   Scoring: Blasting enemies
+-   Scoring: Hitting an enemy with your notes awards 300 score. Running into an enemy hurts you but destroys them, and awards 100 score.
 -   Once game is either won or lost, all movement and firing freezes.
 -   How I delayed firing:
     -   Player: Used the given context variable of the OnFire method to only create a projectile once per press.
