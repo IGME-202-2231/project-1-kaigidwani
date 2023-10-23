@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.UI;
 
 // Kai Gidwani
 // 10/17/23
@@ -31,37 +32,45 @@ public class CollisionManager : MonoBehaviour
     private int playerScore = 0;
 
     // List to hold all the enemy and player bullets
-    private List<GameObject> playerBullets = new List<GameObject>();
-    private List<GameObject> enemyBullets = new List<GameObject>();
+    [SerializeField] private List<GameObject> playerBullets = new List<GameObject>();
+    [SerializeField] private List<GameObject> enemyBullets = new List<GameObject>();
 
     // Textmesh to display the score
-    [SerializeField] public TextMesh scoreTextMesh;
+    [SerializeField] public Text scoreTextMesh;
     // Textmesh to display the lives
-    [SerializeField] public TextMesh healthTextMesh;
+    [SerializeField] public Text healthTextMesh;
+
+    // Bool if game is paused
+    private bool gamePaused = false;
 
     // Update is called once per frame
     void Update()
     {
-        // Reset all flags to false
+        // === Reset all collision flags to false ===
 
         // Reset all player bullet flags to false
         foreach (GameObject sprite in playerBullets)
         {
             sprite.GetComponent<SpriteInfo>().IsColliding = false;
         }
+
         // Reset all enemy bullet flags to false
         foreach (GameObject sprite in enemyBullets)
         {
             sprite.GetComponent<SpriteInfo>().IsColliding = false;
         }
+
         // Reset all enemies flags to false
         foreach (GameObject sprite in enemies)
         {
             sprite.GetComponent<SpriteInfo>().IsColliding = false;
         }
+
         // Reset player flag to false
         player.GetComponent<SpriteInfo>().IsColliding = false;
 
+
+        // === Check the collisions of objects against other objects ===
 
         // Create lists of items to remove if they are colliding
         List<GameObject> playerBulletsToRemove = new List<GameObject>();
@@ -71,20 +80,48 @@ public class CollisionManager : MonoBehaviour
         // Loop through and check all ENEMY BULLETS against the PLAYER
         foreach (GameObject enemyBullet in enemyBullets)
         {
+            foreach (GameObject playerBullet in playerBullets)
+            {
+                // === Check if player and enemy bullets are colliding ===
+
+                // Bool to hold if theyre colliding to set both objects
+                // instead of running the check twice
+                bool bulletColliding = false;
+
+                // Check if colliding
+                bulletColliding = aabbCheck(enemyBullet, playerBullet);
+
+                // Set flags to true if it is, leave alone if not
+                if (bulletColliding)
+                {
+                    playerBullet.GetComponent<SpriteInfo>().IsColliding = true;
+                    enemyBullet.GetComponent<SpriteInfo>().IsColliding = true;
+
+                    // Add the reference of the enemy bullet to the list to be removed
+                    enemyBulletsToRemove.Add(enemyBullet);
+
+                    // Add the reference of the player bullet to the list to be removed
+                    playerBulletsToRemove.Add(playerBullet);
+                }
+            }
+
+
+            // === Now check if the player is colliding with an enemy bullet ===
+
             // Bool to hold if theyre colliding to set both objects
             // instead of running the check twice
-            bool colliding = false;
+            bool playerColliding = false;
 
             // Check if colliding
-            colliding = aabbCheck(player, enemyBullet);
+            playerColliding = aabbCheck(player, enemyBullet);
 
             // Set flags to true if it is, leave alone if not
-            if (colliding)
+            if (playerColliding)
             {
                 player.GetComponent<SpriteInfo>().IsColliding = true;
                 enemyBullet.GetComponent<SpriteInfo>().IsColliding = true;
 
-                // Add the reference the enemy bullet to the list to be removed
+                // Add the reference of the enemy bullet to the list to be removed
                 enemyBulletsToRemove.Add(enemyBullet);
 
                 // Reduce the player health for getting hit
@@ -98,6 +135,8 @@ public class CollisionManager : MonoBehaviour
         {
             foreach (GameObject playerBullet in playerBullets)
             {
+                // === Check if player bullets are hitting enemies ===
+
                 // Bool to hold if theyre colliding to set both objects
                 // instead of running the check twice
                 bool pBulletColliding = false;
@@ -114,13 +153,14 @@ public class CollisionManager : MonoBehaviour
                     // Add to player score
                     playerScore += 300;
 
-                    // Add the reference the player bullet to the list to be removed
+                    // Add the reference of the player bullet to the list to be removed
                     playerBulletsToRemove.Add(playerBullet);
 
-                    // Add the reference the enemy to the list to be removed
+                    // Add the reference of the enemy to the list to be removed
                     enemiesToRemove.Add(enemy);
                 }
             }
+
 
             // === Now check if that enemy is hitting the player themself ===
 
@@ -140,7 +180,7 @@ public class CollisionManager : MonoBehaviour
                 // Add to player score
                 playerScore += 100;
 
-                // Add the reference the enemy to the list to be removed
+                // Add the reference of the enemy to the list to be removed
                 enemiesToRemove.Add(enemy);
 
                 // Reduce player health for getting hit
@@ -149,7 +189,7 @@ public class CollisionManager : MonoBehaviour
         }
 
 
-        // Once all collision checking is done remove things that need to be removed
+        // === Remove items that need to be removed ===
 
         // Remove the enemy bullets
         foreach (GameObject enemyBullet in enemyBulletsToRemove)
@@ -178,36 +218,60 @@ public class CollisionManager : MonoBehaviour
             Destroy(enemy);
         }
 
+
+        // === Enemy Firing ===
+
+        // If game is unpaused
+        if (!gamePaused)
+        {
+            // Loop through every enemy
+            foreach (GameObject enemy in enemies)
+            {
+                // Try to shoot a bullet and save it in bullet
+                GameObject bullet = enemy.GetComponent<EnemyBehavior>().Fire();
+
+                // If the shooting was successful
+                if (bullet != null)
+                {
+                    // Add the bullet to the list
+                    enemyBullets.Add(bullet);
+                }
+            }
+        }
+
+
+        // === Update UI ===
+
         // Update the score and health
         scoreTextMesh.text = "Score: " + playerScore;
         healthTextMesh.text = "Health: " + playerHealth;
 
-        // Check if game is over
+
+        // === Check game ending conditions ===
 
         // Less than or equal to 0 because it is technically possible although
         // highly unlikely to get less than 0 health
         // if you get hit by an enemy and a bullet on the same frame
         if (playerHealth <= 0) 
         {
-            // If you lose, remove all enemies
+            // If you lose, pause all enemies
             foreach (GameObject enemy in enemies)
             {
-                enemiesToRemove.Add(enemy);
+                enemy.GetComponent<MovementController>().Speed = 0;
             }
 
-            // Remove the enemies
-            foreach (GameObject enemy in enemiesToRemove)
-            {
-                // Remove the reference to the enemies
-                enemies.Remove(enemy);
-                // Get rid of the enemy from the scene
-                Destroy(enemy);
-            }
+            // Pause and hide the player
+            gamePaused = true;
+            player.GetComponent<MovementController>().Speed = 0;
+            player.GetComponent<SpriteRenderer>().color = new Color(0, 0, 0, 0);
         }
+        // If there are no more enemies, you win and pause movement and shooting
         else if (enemies.Count == 0)
         {
             // If you win, reduce player speed to 0
             player.GetComponent<MovementController>().Speed = 0;
+            // Make it so player can't shoot
+            gamePaused = true;
         }
     }
 
@@ -229,15 +293,19 @@ public class CollisionManager : MonoBehaviour
 
     public void OnFire(InputAction.CallbackContext context)
     {
-        // Create a player bullet
-        playerBullets.Add(
-            Instantiate(
-                texturePlayerBullet,
-                new Vector3(
-                    player.transform.position.x,
-                    player.transform.position.y + player.GetComponent<SpriteInfo>().BoxSize.y/2 + texturePlayerBullet.GetComponent<SpriteInfo>().BoxSize.y/2 + .1f,
-                    0),
-                Quaternion.identity)
-                );
+        // Only shoots once per button press and if the player is allowed to be shooting
+        if (context.phase == InputActionPhase.Performed && !gamePaused)
+        {
+            // Create a player bullet
+            playerBullets.Add(
+                Instantiate(
+                    texturePlayerBullet,
+                    new Vector3(
+                        player.transform.position.x,
+                        player.transform.position.y + player.GetComponent<SpriteInfo>().BoxSize.y / 2 + texturePlayerBullet.GetComponent<SpriteInfo>().BoxSize.y / 2 + .1f,
+                        0),
+                    Quaternion.identity)
+                    );
+        }
     }
 }

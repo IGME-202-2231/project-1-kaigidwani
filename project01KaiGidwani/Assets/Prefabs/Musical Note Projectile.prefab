@@ -98,7 +98,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a92c2d3822e9a874b99e2690e49795fe, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  boundingBox: {x: 0.7, y: 0.7}
+  boundingBox: {x: 0.7, y: 0.4}
   spriteRenderer: {fileID: 5600320705045206355}
   isColliding: 0
 --- !u!114 &4530356387475707130

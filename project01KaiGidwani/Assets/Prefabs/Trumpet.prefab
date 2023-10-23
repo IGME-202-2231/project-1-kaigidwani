@@ -12,6 +12,7 @@ GameObject:
   - component: {fileID: 6333942258977104799}
   - component: {fileID: 3013929010815491013}
   - component: {fileID: -8637497559544906704}
+  - component: {fileID: -61466674519322729}
   m_Layer: 0
   m_Name: Trumpet
   m_TagString: Untagged
@@ -32,7 +33,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 5
+  m_RootOrder: -1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!212 &6333942258977104799
 SpriteRenderer:
@@ -98,7 +99,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a92c2d3822e9a874b99e2690e49795fe, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  boundingBox: {x: 0.8, y: 1.4}
+  boundingBox: {x: 0.8, y: 1.2}
   spriteRenderer: {fileID: 6333942258977104799}
   isColliding: 0
 --- !u!114 &-8637497559544906704
@@ -116,3 +117,19 @@ MonoBehaviour:
   speed: 0.5
   wrap: 0
   direction: {x: 0, y: -1, z: 0}
+--- !u!114 &-61466674519322729
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7540007332103021237}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 71180e69ec22eec438046b3629f3f693, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  enemyType: 0
+  shootingAmount: 5
+  shootingInterval: 2
+  bulletType: {fileID: 183485460265109590, guid: 7f964bc61e3c494478adca03ebb77e49, type: 3}
