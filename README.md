@@ -46,6 +46,7 @@ I hand made all the art assets myself!
 ## Known Issues
 
 -    It is know that objects offscreen do not get culled.
+-    The random firing interval is not consistent between platforms.
 
 ### Requirements not completed
 
