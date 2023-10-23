@@ -10,6 +10,12 @@ public class MovementController : MonoBehaviour
 {
     private Vector3 objectPosition; // Initialized in Start() via transform
     [SerializeField] private float speed = 1f; // Set in the inspector
+    public float Speed
+    {
+        get { return speed; }
+        set { speed = value; }
+    }
+
     [SerializeField] private bool wrap = false;
 
     private Vector3 velocity = Vector3.zero;

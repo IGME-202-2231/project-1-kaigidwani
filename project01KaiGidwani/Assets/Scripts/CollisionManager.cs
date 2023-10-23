@@ -34,6 +34,11 @@ public class CollisionManager : MonoBehaviour
     private List<GameObject> playerBullets = new List<GameObject>();
     private List<GameObject> enemyBullets = new List<GameObject>();
 
+    // Textmesh to display the score
+    [SerializeField] public TextMesh scoreTextMesh;
+    // Textmesh to display the lives
+    [SerializeField] public TextMesh healthTextMesh;
+
     // Update is called once per frame
     void Update()
     {
@@ -106,6 +111,8 @@ public class CollisionManager : MonoBehaviour
                     enemy.GetComponent<SpriteInfo>().IsColliding = true;
                     playerBullet.GetComponent<SpriteInfo>().IsColliding = true;
 
+                    // Add to player score
+                    playerScore += 300;
 
                     // Add the reference the player bullet to the list to be removed
                     playerBulletsToRemove.Add(playerBullet);
@@ -127,9 +134,11 @@ public class CollisionManager : MonoBehaviour
             // Set flags to true if it is, leave alone if not
             if (colliding)
             {
-                // *** Do something with player getting hit here ***
                 enemy.GetComponent<SpriteInfo>().IsColliding = true;
                 player.GetComponent<SpriteInfo>().IsColliding = true;
+
+                // Add to player score
+                playerScore += 100;
 
                 // Add the reference the enemy to the list to be removed
                 enemiesToRemove.Add(enemy);
@@ -163,12 +172,15 @@ public class CollisionManager : MonoBehaviour
         // Remove the enemy bullets
         foreach (GameObject enemy in enemiesToRemove)
         {
-            // Remove the reference to the bullet
+            // Remove the reference to the enemy
             enemies.Remove(enemy);
-            // Get rid of the bullet from the scene
+            // Get rid of the enemy from the scene
             Destroy(enemy);
         }
 
+        // Update the score and health
+        scoreTextMesh.text = "Score: " + playerScore;
+        healthTextMesh.text = "Health: " + playerHealth;
 
         // Check if game is over
 
@@ -177,11 +189,25 @@ public class CollisionManager : MonoBehaviour
         // if you get hit by an enemy and a bullet on the same frame
         if (playerHealth <= 0) 
         {
-            // Game over lose here
+            // If you lose, remove all enemies
+            foreach (GameObject enemy in enemies)
+            {
+                enemiesToRemove.Add(enemy);
+            }
+
+            // Remove the enemies
+            foreach (GameObject enemy in enemiesToRemove)
+            {
+                // Remove the reference to the enemies
+                enemies.Remove(enemy);
+                // Get rid of the enemy from the scene
+                Destroy(enemy);
+            }
         }
         else if (enemies.Count == 0)
         {
-            // Game over win here
+            // If you win, reduce player speed to 0
+            player.GetComponent<MovementController>().Speed = 0;
         }
     }
 

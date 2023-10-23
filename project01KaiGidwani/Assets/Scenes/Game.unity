@@ -166,6 +166,8 @@ MonoBehaviour:
   texturePlayerBullet: {fileID: 5801619804985871545, guid: 1c3c2243cc982464a9a0ffe54285b1e9, type: 3}
   smallEnemyBullet: {fileID: 183485460265109590, guid: 7f964bc61e3c494478adca03ebb77e49, type: 3}
   bigEnemyBullet: {fileID: 5342579013360623216, guid: 03484b64f02d0a44e9711cc01741a6c8, type: 3}
+  scoreTextMesh: {fileID: 0}
+  healthTextMesh: {fileID: 0}
 --- !u!4 &93492963
 Transform:
   m_ObjectHideFlags: 0
