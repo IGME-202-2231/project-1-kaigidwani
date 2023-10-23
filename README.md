@@ -14,6 +14,7 @@
 -   Player Health: Set amount of lives
 -   End Condition: Defeating all the enemies on the screen
 -   Scoring: Blasting enemies
+-   Once game is either won or lost, all movement and firing freezes.
 -   How I delayed firing:
     -   Player: Used the given context variable of the OnFire method to only create a projectile once per press.
     -   Enemy: Created a class to store all the information. Used a cooldown time on top of random firing with adjustable intervals for both.
